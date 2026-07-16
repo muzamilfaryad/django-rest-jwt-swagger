@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.models import User
 from swaggerwithdjango.response import api_response
 from swaggerwithdjango.bugsnag import notify_bugsnag, leave_breadcrumb
@@ -119,7 +120,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
                 status_code=status.HTTP_200_OK,
             )
 
-        except (TokenError, InvalidToken):
+        except (TokenError, InvalidToken, AuthenticationFailed):
             logger.warning(
                 "Failed login attempt for username: %s from IP: %s",
                 request.data.get("username"),
@@ -164,15 +165,9 @@ class CustomTokenRefreshView(TokenRefreshView):
             )
 
         except (TokenError, InvalidToken):
-            notify_bugsnag(
-                Exception("Invalid or expired refresh token"),
-                severity="info",
-                context="token_refresh",
-                metadata={
-                    "token": {
-                        "ip": request.META.get("REMOTE_ADDR"),
-                    }
-                },
+            logger.warning(
+                "Invalid or expired refresh token from IP: %s",
+                request.META.get("REMOTE_ADDR"),
             )
             return api_response(
                 message="Invalid or expired refresh token.",

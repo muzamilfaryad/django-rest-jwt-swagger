@@ -150,6 +150,10 @@ BUGSNAG = {
         "secret",
         "api_key",
     ],
+    "ignore_classes": [
+        "rest_framework.exceptions.AuthenticationFailed",
+        "rest_framework.exceptions.NotAuthenticated",
+    ],
 }
 
 from swaggerwithdjango.logging import LOGGING

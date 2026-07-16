@@ -18,17 +18,17 @@ LOGGING = {
             "formatter": "verbose",
         },
         "bugsnag": {
-            "level": "WARNING",
+            "level": "ERROR",
             "class": "bugsnag.handlers.BugsnagHandler",
         },
     },
     "root": {
-        "handlers": ["console", "bugsnag"],
+        "handlers": ["console"],
         "level": "WARNING",
     },
     "loggers": {
         "django": {
-            "handlers": ["console", "bugsnag"],
+            "handlers": ["console"],
             "level": "WARNING",
             "propagate": False,
         },
