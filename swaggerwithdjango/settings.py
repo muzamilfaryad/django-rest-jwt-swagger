@@ -7,11 +7,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / '.env')
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key")
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
 ALLOWED_HOSTS = []
 
@@ -25,9 +23,11 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "users",
+    "bugsnag.django",
 ]
 
 MIDDLEWARE = [
+    "bugsnag.django.middleware.BugsnagMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -106,6 +106,8 @@ REST_FRAMEWORK = {
         "swaggerwithdjango.renderers.CustomJSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ),
+
+    "EXCEPTION_HANDLER": "swaggerwithdjango.exceptions.custom_exception_handler",
 }
 
 SPECTACULAR_SETTINGS = {
@@ -130,3 +132,24 @@ SIMPLE_JWT = {
     "SIGNING_KEY": SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
+
+BUGSNAG = {
+    "api_key": os.getenv("BUGSNAG_API_KEY"),
+    "project_root": str(BASE_DIR),
+    "release_stage": ENVIRONMENT,
+    "notify_release_stages": ["production", "staging"],
+    "app_version": os.getenv("APP_VERSION", "1.0.0"),
+    "auto_capture_sessions": True,
+    "params_filters": [
+        "password",
+        "password_confirm",
+        "token",
+        "access",
+        "refresh",
+        "authorization",
+        "secret",
+        "api_key",
+    ],
+}
+
+from swaggerwithdjango.logging import LOGGING
