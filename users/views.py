@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 class ProfileAPIView(APIView):
     permission_classes = (IsAuthenticated,)
+    serializer_class = UserSerializer
 
     def get(self, request):
         leave_breadcrumb(
