@@ -27,12 +27,21 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "swaggerwithdjango.middleware.CorrelationIdMiddleware",
+    
     "bugsnag.django.middleware.BugsnagMiddleware",
+    
     "django.middleware.security.SecurityMiddleware",
+    "swaggerwithdjango.middleware.SecurityHeadersMiddleware",
+    
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    
+    "swaggerwithdjango.middleware.RequestLoggingMiddleware",
+    
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
