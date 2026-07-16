@@ -137,7 +137,7 @@ BUGSNAG = {
     "api_key": os.getenv("BUGSNAG_API_KEY"),
     "project_root": str(BASE_DIR),
     "release_stage": ENVIRONMENT,
-    "notify_release_stages": ["production", "staging"],
+    "notify_release_stages": ["production", "staging", "development"],
     "app_version": os.getenv("APP_VERSION", "1.0.0"),
     "auto_capture_sessions": True,
     "params_filters": [
